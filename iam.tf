@@ -55,7 +55,19 @@ resource "aws_iam_policy" "ecs-policy" {
         "ecr:GetDownloadUrlForLayer",
         "ecr:BatchGetImage",
         "logs:CreateLogStream",
-        "logs:PutLogEvents"
+        "logs:PutLogEvents",
+        "autoscaling:Describe*",
+        "ecr:InitiateLayerUpload",
+        "ecs:RegisterContainerInstance",
+        "ecs:StartTask",
+        "ecs:ListClusters",
+        "ecs:DescribeClusters",
+        "ecs:RegisterTaskDefinition",
+        "ecs:RunTask",
+        "ecs:StopTask",
+        "ecr:GetDownloadUrlForLayer",
+        "ec2:Describe*"
+
       ],
       "Resource": "*"
     }
