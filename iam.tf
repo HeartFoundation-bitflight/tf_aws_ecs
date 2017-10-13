@@ -43,21 +43,6 @@ resource "aws_iam_policy" "ecs-policy" {
     {
       "Effect": "Allow",
       "Action": [
-        "ecs:CreateCluster",
-        "ecs:DeregisterContainerInstance",
-        "ecs:DiscoverPollEndpoint",
-        "ecs:Poll",
-        "ecs:RegisterContainerInstance",
-        "ecs:StartTelemetrySession",
-        "ecs:Submit*",
-        "ecr:GetAuthorizationToken",
-        "ecr:BatchCheckLayerAvailability",
-        "ecr:GetDownloadUrlForLayer",
-        "ecr:BatchGetImage",
-        "logs:CreateLogStream",
-        "logs:PutLogEvents",
-        "autoscaling:Describe*",
-        "ecr:InitiateLayerUpload",
         "ecs:RegisterContainerInstance",
         "ecs:StartTask",
         "ecs:ListClusters",
@@ -65,7 +50,28 @@ resource "aws_iam_policy" "ecs-policy" {
         "ecs:RegisterTaskDefinition",
         "ecs:RunTask",
         "ecs:StopTask",
+        "ecs:CreateCluster",
+        "ecs:DeregisterContainerInstance",
+        "ecs:DiscoverPollEndpoint",
+        "ecs:Poll",
+        "ecs:RegisterContainerInstance",
+        "ecs:StartTelemetrySession",
+        "ecs:Submit*",
+
+        "ecr:UploadLayerPart",
+        "ecr:GetAuthorizationToken",
+        "ecr:BatchCheckLayerAvailability",
         "ecr:GetDownloadUrlForLayer",
+        "ecr:BatchGetImage",
+        "ecr:InitiateLayerUpload",
+        "ecr:CompleteLayerUpload",
+        "ecr:PutImage",
+
+        "logs:CreateLogStream",
+        "logs:PutLogEvents",
+
+        "autoscaling:Describe*",
+        
         "ec2:Describe*"
 
       ],
