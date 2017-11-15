@@ -51,6 +51,8 @@ resource "aws_launch_configuration" "ecs" {
   }
 }
 
+
+
 resource "aws_autoscaling_group" "ecs" {
   name                 = "asg-${aws_launch_configuration.ecs.name}"
   vpc_zone_identifier  = ["${var.subnet_id}"]
@@ -72,6 +74,121 @@ resource "aws_autoscaling_group" "ecs" {
     create_before_destroy = true
   }
 }
+
+
+resource "aws_spot_fleet_request" "main" {
+  iam_fleet_role                      = "${aws_iam_role.ecs-role.arn}"
+  spot_price                          = "${var.spot_price}"
+  allocation_strategy                 = "${var.strategy}"
+  target_capacity                     = "${var.instance_count}"
+  terminate_instances_with_expiration = false
+  replace_unhealthy_instances         = true
+  wait_for_fulfillment = true
+  valid_until                         = "${var.valid_until}"
+
+  launch_specification {
+    ami                    = "${var.ami == "" ? format("%s", data.aws_ami.ecs_ami.id) : var.ami}"
+    instance_type          = "${var.spot_instance_type[0]}"
+    spot_price             = "${var.spot_prices[0]}"
+    subnet_id              = "${var.subnet_id[0]}"
+    vpc_security_group_ids = ["${concat(list(aws_security_group.ecs.id), var.security_group_ids)}"]
+    iam_instance_profile   = "${aws_iam_instance_profile.ecs_profile.name}"
+    key_name               = "${var.key_name}"
+    associate_public_ip_address = "${var.associate_public_ip_address}"
+
+
+    root_block_device = {
+      volume_type = "gp2"
+      volume_size = "20"
+    }
+      ebs_block_device {
+    device_name           = "/dev/xvdcz"
+    volume_size           = "${var.docker_storage_size}"
+    volume_type           = "gp2"
+    delete_on_termination = true
+  }
+
+    user_data = "${coalesce(var.user_data, data.template_file.user_data.rendered)}"
+  }
+
+    launch_specification {
+    ami                    = "${var.ami == "" ? format("%s", data.aws_ami.ecs_ami.id) : var.ami}"
+    instance_type          = "${var.spot_instance_type[2]}"
+    spot_price             = "${var.spot_prices[2]}"
+    subnet_id              = "${var.subnet_id[0]}"
+    vpc_security_group_ids = ["${concat(list(aws_security_group.ecs.id), var.security_group_ids)}"]
+    iam_instance_profile   = "${aws_iam_instance_profile.ecs_profile.name}"
+    key_name               = "${var.key_name}"
+    associate_public_ip_address = "${var.associate_public_ip_address}"
+
+
+    root_block_device = {
+      volume_type = "gp2"
+      volume_size = "20"
+    }
+      ebs_block_device {
+    device_name           = "/dev/xvdcz"
+    volume_size           = "${var.docker_storage_size}"
+    volume_type           = "gp2"
+    delete_on_termination = true
+  }
+
+    user_data = "${coalesce(var.user_data, data.template_file.user_data.rendered)}"
+  }
+
+    launch_specification {
+    ami                    = "${var.ami == "" ? format("%s", data.aws_ami.ecs_ami.id) : var.ami}"
+    instance_type          = "${var.spot_instance_type[3]}"
+    spot_price             = "${var.spot_prices[3]}"
+    subnet_id              = "${var.subnet_id[0]}"
+    vpc_security_group_ids = ["${concat(list(aws_security_group.ecs.id), var.security_group_ids)}"]
+    iam_instance_profile   = "${aws_iam_instance_profile.ecs_profile.name}"
+    key_name               = "${var.key_name}"
+    associate_public_ip_address = "${var.associate_public_ip_address}"
+
+
+    root_block_device = {
+      volume_type = "gp2"
+      volume_size = "20"
+    }
+      ebs_block_device {
+    device_name           = "/dev/xvdcz"
+    volume_size           = "${var.docker_storage_size}"
+    volume_type           = "gp2"
+    delete_on_termination = true
+  }
+
+    user_data = "${coalesce(var.user_data, data.template_file.user_data.rendered)}"
+  }
+
+  launch_specification {
+    ami                    = "${var.ami == "" ? format("%s", data.aws_ami.ecs_ami.id) : var.ami}"
+    instance_type          = "${var.spot_instance_type[1]}"
+    spot_price             = "${var.spot_prices[1]}"
+    subnet_id              = "${var.subnet_id[0]}"
+    vpc_security_group_ids = ["${concat(list(aws_security_group.ecs.id), var.security_group_ids)}"]
+    iam_instance_profile   = "${aws_iam_instance_profile.ecs_profile.name}"
+    key_name               = "${var.key_name}"
+    associate_public_ip_address = "${var.associate_public_ip_address}"
+
+
+    root_block_device = {
+      volume_type = "gp2"
+      volume_size = "20"
+    }
+  ebs_block_device {
+    device_name           = "/dev/xvdcz"
+    volume_size           = "${var.docker_storage_size}"
+    volume_type           = "gp2"
+    delete_on_termination = true
+  }
+    user_data = "${coalesce(var.user_data, data.template_file.user_data.rendered)}"
+  }
+
+  depends_on = ["aws_iam_policy_attachment.fleet"]
+}
+
+
 
 resource "aws_security_group" "ecs" {
   name        = "ecs-sg-${var.name}"

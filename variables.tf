@@ -26,7 +26,7 @@ variable "consul_image" {
 }
 
 variable "docker_storage_size" {
-  default     = "22"
+  default     = "30"
   description = "EBS Volume size in Gib that the ECS Instance uses for Docker images and metadata "
 }
 
@@ -110,6 +110,7 @@ variable "servers" {
 variable "subnet_id" {
   type        = "list"
   description = "The AWS Subnet ID in which you want to delpoy your instances"
+  default     = []
 }
 
 variable "tagName" {
@@ -123,4 +124,35 @@ variable "user_data" {
 
 variable "vpc_id" {
   description = "The AWS VPC ID which you want to deploy your instances"
+}
+
+// Customize for spot fleet options
+variable "spot_price" { default = "0.122"}
+
+variable "spot_prices" {
+  description = "Bid amount to spot fleet"
+  type        = "list"
+  default     = ["0.029", "0.0324", "0.036", "0.0327"]
+}
+
+variable "spot_instance_type" {
+  description = "Bid amount to spot fleet"
+  type        = "list"
+  default     = ["i3.large", "r4.large", "r3.large", "c3.large"]
+}
+
+
+variable "strategy" {
+  description = "Instance placement strategy name"
+  default     = "diversified"
+}
+
+variable "instance_count" {
+  description = "Number of instances"
+  default     = 2
+}
+
+variable "valid_until" {
+  description = "limit of spot fleet"
+  default     = "2020-12-15T00:00:00Z"
 }
