@@ -127,7 +127,9 @@ variable "vpc_id" {
 }
 
 // Customize for spot fleet options
-variable "spot_price" { default = "0.122"}
+variable "spot_price" {
+  default = "0.122"
+}
 
 variable "spot_prices" {
   description = "Bid amount to spot fleet"
@@ -140,7 +142,6 @@ variable "spot_instance_type" {
   type        = "list"
   default     = ["i3.large", "r4.large", "r3.large", "c3.large"]
 }
-
 
 variable "strategy" {
   description = "Instance placement strategy name"
